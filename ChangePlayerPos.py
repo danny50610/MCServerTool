@@ -1,5 +1,7 @@
 import json
 import argparse
+import shutil
+
 import nbt
 import os
 
@@ -23,13 +25,16 @@ def main():
 
     print('Player uuid: ' + target_uuid)
 
-    player_dat = nbt.nbt.NBTFile(os.path.join('world', 'playerdata', target_uuid + '.dat'), 'rb')
+    filename = os.path.join('world', 'playerdata', target_uuid + '.dat')
+    shutil.copy(filename, filename + '.bak')
+
+    player_dat = nbt.nbt.NBTFile(filename, 'rb')
     player_dat['Dimension'].value = args.dim
     player_dat['Pos'][0].value = args.x
     player_dat['Pos'][1].value = args.y
     player_dat['Pos'][2].value = args.z
 
-    player_dat.write_file(os.path.join('world', 'playerdata', target_uuid + '.dat'))
+    player_dat.write_file(filename)
     print('Done')
 
 
